@@ -395,10 +395,13 @@ public class MainActivity extends AppCompatActivity {
 
         if(simSlot == 1){
             sim1.setText(activeCarrier);
+            sim1.setEnabled(true);
             sim1.setChecked(true);
             sim2.setEnabled(false);
+
         }else{
             sim2.setText(activeCarrier);
+            sim2.setEnabled(true);
             sim2.setChecked(true);
             sim1.setEnabled(false);
         }
