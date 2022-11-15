@@ -285,34 +285,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setActiveSimProperties(){
+    private void setActiveSimProperties() {
 
-        String dCarrier = "" ;
-        if (!activeCarrier.equals("") && !activeCarrier.equals(null)){
-            if(activeCarrier.contains(" ")){
+        String dCarrier = "";
+        if (!activeCarrier.equals("") && !activeCarrier.equals(null)) {
+            if (activeCarrier.contains(" ")) {
                 dCarrier = activeCarrier.split(" ")[0].toUpperCase();
-            } else if(activeCarrier.contains("-")){
+            } else if (activeCarrier.contains("-")) {
                 dCarrier = activeCarrier.split("-")[0].toUpperCase();
             } else {
                 dCarrier = activeCarrier.toUpperCase();
             }
         }
-        if(dCarrier.contains("-")){dCarrier = dCarrier.split("-")[0].toUpperCase();}
+        if (dCarrier.contains("-")) {
+            dCarrier = dCarrier.split("-")[0].toUpperCase();
+        }
 
         dCarrier = dCarrier.replaceAll("\\s", "");
         String[] providersList = providers.split("\n"), line;
-        String prov = "", others="";
-        for (String s: providersList){
+        String prov = "", others = "";
+        for (String s : providersList) {
             line = s.split("@");
             prov = line[0];
             prov = prov.replaceAll("\\s", "").toUpperCase();
             others = others + "\n" + prov + " @ " + dCarrier;
-            if (prov.equals(dCarrier)){
+            if (prov.equals(dCarrier)) {
                 shortCode = line[1];
                 on = line[2];
                 off = line[3];
             }
         }
+
         fill_Display2("Provider is: " + dCarrier + "\nShortcode is : " + shortCode + "\nOn message is : " + on + "\nOff message is : " + off);
 
     }
