@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Precise Daily Birthday Messages</string>
+    <string name="dialog_message">Welcome to Alert Dialog</string>
+    <string name="dialog_title">Demo Alert Dialog</string>
 </resources>
