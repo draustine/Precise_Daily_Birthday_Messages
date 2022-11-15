@@ -37,7 +37,16 @@ public class MainActivity extends AppCompatActivity {
 
         phoneNumber = findViewById(R.id.phoneNumber);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        
+
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
     }
 }
