@@ -33,9 +33,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,12 +61,14 @@ public class MainActivity extends AppCompatActivity {
     private String carrier, carrier1, carrier2, activeCarrier, providers, shortCode, on, off;
     private String phone, phone1, phone2;
     private AlertDialog.Builder builder;
-    private String messageTemplate, belatedTemplate;
+    private String messageTemplate, belatedTemplate, clientsList, celebrantsList;
     private SwipeRefreshLayout parent;
     private Button send_button, preview_button;
     private List<String> messageList = new ArrayList<>();
     private LocalDate localdate = LocalDate.now(), anniversaryDate;
     private int day = localdate.getDayOfMonth(), month = localdate.getMonthValue(), year = localdate.getYear();
+    private static final String filename = "Upcoming_Birthdays.txt";
+    private static final String messagesFilename = "Messages.txt";
 
 
     @Override
@@ -112,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
         localdate = LocalDate.of(2022, 2, 15);
         fill_Display1(localdate.toString());
+
     }
 
 
@@ -144,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
     private void startUp() {
         afterSimChange();
         setActiveSimProperties();
+        getMessageTemplate();
     }
 
     private void getProviders() throws IOException {
@@ -302,11 +311,127 @@ public class MainActivity extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+private void getMessageTemplate(){
+        if(celebrantsList.equals("") || celebrantsList.equals(null) ){
+            try {
+                celebrantsList = getStringFromRaw(messagesFilename);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+}
 
-    private void getClientsList(){
+
+
+
+
+
+
+
+    private void getClientsList() throws IOException, InterruptedException{
+        if(isNetworkAvailable()) {
+            celebrantsDownloader();
+            fill_Display1(celebrantsList);
+        }else{
+            clientsList = getStringFromRaw(filename);
+            if (clientsList != "") {
+                String tempStr = "No Internet connection\n List from File is\n" + clientsList;
+            } else {
+                fill_Display1("Clients file not available");
+            }
+        }
 
 
     }
+
+
+    private void celebrantsDownloader() throws InterruptedException, MalformedURLException {
+        URL list = new URL(getString(R.string.file_url));
+
+        Thread theList = new Thread(()->{
+            try {
+                listDownloader(list);
+            } catch (IOException e) {
+                e.printStackTrace();
+                fill_Display1("File not found");
+            }
+        });
+
+        theList.start();
+        theList.join();
+    }
+
+
+    private void listDownloader(URL url) throws IOException, FileNotFoundException {
+        int counter = 0;
+        String tempStr = "", line = "";
+        File path = getApplicationContext().getFilesDir();
+        try{
+            InputStream inp = url.openStream();
+            InputStreamReader reader = new InputStreamReader(inp);
+            BufferedReader br = new BufferedReader(reader);
+            while((line = br.readLine()) != null) {
+                counter++;
+                if (counter == 1) {
+                    tempStr = line;
+                } else {
+                    tempStr = tempStr + "\n" + line;
+                }
+            }
+            clientsList = tempStr;
+            File outputFile = new File(path, filename);
+            FileOutputStream writer = new FileOutputStream(outputFile);
+            writer.write(tempStr.getBytes());
+            writer.close();
+            br.close();
+            reader.close();
+            inp.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            fillDisplay("Online file not found");
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+    private void templateDownloader(URL url) throws IOException, FileNotFoundException {
+        int counter = 0;
+        String tempStr = "", line = "";
+        File path = getApplicationContext().getFilesDir();
+        try{
+            InputStream inp = url.openStream();
+            InputStreamReader reader = new InputStreamReader(inp);
+            BufferedReader br = new BufferedReader(reader);
+            while((line = br.readLine()) != null) {
+                counter++;
+                if (counter == 1) {
+                    tempStr = line;
+                } else {
+                    tempStr = tempStr + "\n" + line;
+                }
+            }
+            messageTemplate = tempStr;
+            File outputFile = new File(path, messagesFilename);
+            FileOutputStream writer = new FileOutputStream(outputFile);
+            writer.write(tempStr.getBytes());
+            writer.close();
+            br.close();
+            reader.close();
+            inp.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            fill_Display1("Online file not found");
+        }
+    }
+
 
 
     private void afterSimChange() {
