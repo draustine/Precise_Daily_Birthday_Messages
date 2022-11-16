@@ -22,6 +22,7 @@ import android.telephony.SmsManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -77,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
         phoneNumber = findViewById(R.id.phoneNumber);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         display1 = findViewById(R.id.display);
+        display2.setMovementMethod(new ScrollingMovementMethod());
+        display1.setMovementMethod(new ScrollingMovementMethod());
         display2 = findViewById(R.id.display2);
         message = findViewById(R.id.message);
         sim1 = findViewById(R.id.sim1);
