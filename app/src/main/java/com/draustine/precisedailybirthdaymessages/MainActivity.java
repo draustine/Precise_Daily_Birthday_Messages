@@ -61,14 +61,13 @@ public class MainActivity extends AppCompatActivity {
     private String carrier, carrier1, carrier2, activeCarrier, providers, shortCode, on, off;
     private String phone, phone1, phone2;
     private AlertDialog.Builder builder;
-    private String messageTemplate, belatedTemplate, clientsList, celebrantsList;
+    private String messageTemplate = "", belatedTemplate = "", clientsList = "", celebrantsList = "", messages = "";
     private SwipeRefreshLayout parent;
     private Button send_button, preview_button;
     private List<String> messageList = new ArrayList<>();
-    private LocalDate localdate = LocalDate.now(), anniversaryDate;
-    private int day = localdate.getDayOfMonth(), month = localdate.getMonthValue(), year = localdate.getYear();
+    private LocalDate localDate = LocalDate.now(), anniversaryDate = null;
     private static final String filename = "Upcoming_Birthdays.txt";
-    private static final String messagesFilename = "Messages.txt";
+    private static final String messagesFilename = "message_template";
 
 
     @Override
@@ -95,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.READ_PHONE_NUMBERS,
                 Manifest.permission.READ_SMS
         };
+        carrier = carrier1 = carrier2 = activeCarrier = providers = shortCode = on = off = "";
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             afterSimChange();
@@ -117,8 +117,8 @@ public class MainActivity extends AppCompatActivity {
 
         startUp();
 
-        localdate = LocalDate.of(2022, 2, 15);
-        fill_Display1(localdate.toString());
+        localDate = LocalDate.of(2022, 2, 15);
+        fill_Display1(localDate.toString());
 
     }
 
@@ -132,9 +132,64 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void prepareMessageList(){
+        String celebs = "";
+        String list[] = celebrantsList.split("\n");
+        int cDay, cMonth, cYear, day, month;
+        String name = "", phone = "", body = "", anniversary = "";
+        if (anniversaryDate == null){
+            cDay = localDate.getDayOfMonth();
+            cMonth = localDate.getMonthValue();
+            cYear = localDate.getYear();
+        } else {
+            cDay = anniversaryDate.getDayOfMonth();
+            cMonth = anniversaryDate.getMonthValue();
+            cYear = anniversaryDate.getYear();
+        }
+
+        messages = "Clients with birthday anniversary on the " + getOrdinal(cDay) + " of " +
+                getMonthName(cMonth) + " " + cYear + "\n";
+        int counter = 0;
+        for(String line: list){
+            counter++;
+            if(counter > 1) {
+                String[] thisLine = line.split("@");
+                day = parseInt(thisLine[3]);
+                month = parseInt(thisLine[2]);
+                if(day == cDay && month == cMonth){
+                    name = thisLine[0];
+                    phone = thisLine[1];
+                    anniversary = thisLine[4];
+                    String message = messageTemplate.replace(" name,", " " + name + ",");
+                    message = message.replace(" ord ", " " + anniversary + " ");
+                    messages = messages + "\nMessage " + counter + message;
+                    messageList.add(phone + "@" + message);
+                }
+            }
+        }
+        fill_Display1(messages);
+    }
+
+
+
     private void prepareMessages(){
-
-
+        if(messageTemplate.equals("")){
+            try {
+                messageTemplate = getStringFromRaw(messagesFilename);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if(clientsList ==""){
+            try {
+                getClientsList();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        prepareMessageList();
     }
 
 
@@ -176,7 +231,6 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, 1);
         }
     }
-
 
     // Checks whether permissions have been granted
     private boolean hasPermissions(Context context, String... PERMISSIONS) {
@@ -269,22 +323,35 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
-    private void sendTheMesssage() {
+    private void sendTheMessage() {
         String body, number, defaultNumber;
-        defaultNumber = "08108020030";
         number = phoneNumber.getText().toString();
-        if (isEmpty(number)) {
-            number = defaultNumber;
+        String comment = "";
+        if (!(isEmpty(number))) {
+            body = display1.getText().toString();
+            smsManager.sendTextMessage(number, null, body, null, null);
+            comment =  "Message sent " + number + " via " + activeCarrier + " network";
+        } else {
+            int counter = 0;
+            for(String line: messageList){
+                counter++;
+                String[] thisLine = line.split("@");
+                body = thisLine[1];
+                number = thisLine[0];
+                smsManager.sendTextMessage(number, null, body, null, null);
+                if (counter == 1 && !(shortCode.equals(""))){
+                    smsManager.sendTextMessage(shortCode, null, off, null, null);
+                } else if (counter == messageList.size() && !(shortCode.equals(""))){
+                    smsManager.sendTextMessage(shortCode, null, on, null, null);
+                }
+            }
+            comment = counter + " messages sent via " + activeCarrier + " network";
         }
-        body = display1.getText().toString();
-        smsManager.sendTextMessage(number, null, body, null, null);
+        Toast.makeText(this, comment, Toast.LENGTH_LONG).show();
     }
 
     public void sendMessage(View view) {
         showAlert();
-
-
-        //sendTheMessage();
     }
 
     private void showAlert() {
@@ -292,7 +359,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage("Do you want to send the displayed messages").setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        finish();
+                        sendTheMessage();
                         Toast.makeText(getApplicationContext(), "You selected yes", Toast.LENGTH_LONG).show();
                     }
                 })
@@ -318,10 +385,10 @@ public class MainActivity extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-private void getMessageTemplate(){
-        if(celebrantsList.equals("") || celebrantsList.equals(null) ){
+    private void getMessageTemplate(){
+        if(messageTemplate.equals("")){
             try {
-                celebrantsList = getStringFromRaw(messagesFilename);
+                messageTemplate = getStringFromRaw(messagesFilename);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -409,35 +476,6 @@ private void getMessageTemplate(){
 
 
 
-    private void templateDownloader(URL url) throws IOException, FileNotFoundException {
-        int counter = 0;
-        String tempStr = "", line = "";
-        File path = getApplicationContext().getFilesDir();
-        try{
-            InputStream inp = url.openStream();
-            InputStreamReader reader = new InputStreamReader(inp);
-            BufferedReader br = new BufferedReader(reader);
-            while((line = br.readLine()) != null) {
-                counter++;
-                if (counter == 1) {
-                    tempStr = line;
-                } else {
-                    tempStr = tempStr + "\n" + line;
-                }
-            }
-            messageTemplate = tempStr;
-            File outputFile = new File(path, messagesFilename);
-            FileOutputStream writer = new FileOutputStream(outputFile);
-            writer.write(tempStr.getBytes());
-            writer.close();
-            br.close();
-            reader.close();
-            inp.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            fill_Display1("Online file not found");
-        }
-    }
 
 
 
@@ -640,4 +678,7 @@ private void getMessageTemplate(){
     }
 
 
+    public void previewMessages(View view) {
+        prepareMessages();
+    }
 }
