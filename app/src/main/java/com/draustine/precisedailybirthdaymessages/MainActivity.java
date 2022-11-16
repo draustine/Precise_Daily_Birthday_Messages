@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private String carrier, carrier1, carrier2, activeCarrier, providers, shortCode, on, off;
     private String phone, phone1, phone2;
     private AlertDialog.Builder builder;
-
+    private String messageTemplate, belatedTemplate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
     private void getProviders() throws IOException {
         String filename = "network_providers";
         providers = getStringFromRaw(filename);
+        filename = "Belated Message Template";
+        belatedTemplate = getStringFromAsset(filename);
     }
 
     // Requests for permissions
@@ -411,5 +413,51 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private String getMonthName(int month){
+        String monthName = "";
+        switch(month) {
+            case 1:  monthName = "January";
+                break;
+            case 2:  monthName = "February";
+                break;
+            case 3:  monthName = "March";
+                break;
+            case 4:  monthName = "April";
+                break;
+            case 5:  monthName = "May";
+                break;
+            case 6:  monthName = "June";
+                break;
+            case 7:  monthName = "July";
+                break;
+            case 8:  monthName = "August";
+                break;
+            case 9:  monthName = "September";
+                break;
+            case 10:  monthName = "October";
+                break;
+            case 11:  monthName = "November";
+                break;
+            case 12:  monthName = "December";
+                break;
+        }
+        return monthName;
+    }
 
+    private String getOrdinal(int num){
+        String val = "";
+        String input = String.valueOf(num);
+        String last = input.substring(input.length() - 1);
+        int iLast = Integer.parseInt(last);
+        if (num == 1 || (num > 20 && iLast == 1)) {
+            val = num + "st";
+        } else if (num == 2 || (num > 20 && iLast == 2)) {
+            val = num + "nd";
+        } else if (num == 3 || (num > 20 && iLast == 3)) {
+            val = num + "rd";
+        } else {
+            val = num + "th";
+        }
+        return val;
+    }
 }
