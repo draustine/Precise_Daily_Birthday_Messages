@@ -78,9 +78,9 @@ public class MainActivity extends AppCompatActivity {
         phoneNumber = findViewById(R.id.phoneNumber);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         display1 = findViewById(R.id.display);
-        display2.setMovementMethod(new ScrollingMovementMethod());
-        display1.setMovementMethod(new ScrollingMovementMethod());
         display2 = findViewById(R.id.display2);
+        display1.setMovementMethod(new ScrollingMovementMethod());
+        display2.setMovementMethod(new ScrollingMovementMethod());
         message = findViewById(R.id.message);
         sim1 = findViewById(R.id.sim1);
         sim2 = findViewById(R.id.sim2);
