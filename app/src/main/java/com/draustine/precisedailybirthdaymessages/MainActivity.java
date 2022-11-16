@@ -153,6 +153,13 @@ public class MainActivity extends AppCompatActivity {
         afterSimChange();
         setActiveSimProperties();
         getMessageTemplate();
+        try {
+            getClientsList();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void getProviders() throws IOException {
@@ -388,7 +395,7 @@ private void getMessageTemplate(){
             inp.close();
         } catch (IOException e) {
             e.printStackTrace();
-            fillDisplay("Online file not found");
+            fill_Display1("Online file not found");
         }
 
     }
