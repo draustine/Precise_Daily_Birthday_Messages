@@ -117,26 +117,13 @@ public class MainActivity extends AppCompatActivity {
 
         startUp();
 
-        localDate = LocalDate.of(2022, 2, 15);
-        fill_Display1(localDate.toString());
-
-    }
-
-
-    private int getSimCount() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            getPermissions();
-        }
-        int count = subsManager.getActiveSubscriptionInfoCount();
-        return count;
     }
 
 
     private void prepareMessageList(){
-        String celebs = "";
-        String list[] = celebrantsList.split("\n");
+        String list[] = clientsList.split("\n");
         int cDay, cMonth, cYear, day, month;
-        String name = "", phone = "", body = "", anniversary = "";
+        String name = "", phone = "", anniversary = "";
         if (anniversaryDate == null){
             cDay = localDate.getDayOfMonth();
             cMonth = localDate.getMonthValue();
@@ -149,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
         messages = "Clients with birthday anniversary on the " + getOrdinal(cDay) + " of " +
                 getMonthName(cMonth) + " " + cYear + "\n";
-        int counter = 0;
+        int counter = 0, mCounter = 0;
         for(String line: list){
             counter++;
             if(counter > 1) {
@@ -157,17 +144,20 @@ public class MainActivity extends AppCompatActivity {
                 day = parseInt(thisLine[3]);
                 month = parseInt(thisLine[2]);
                 if(day == cDay && month == cMonth){
+                    mCounter++;
+                    if(mCounter == 1){celebrantsList = line;} else {celebrantsList = celebrantsList + "\n" + line;}
                     name = thisLine[0];
                     phone = thisLine[1];
                     anniversary = thisLine[4];
                     String message = messageTemplate.replace(" name,", " " + name + ",");
                     message = message.replace(" ord ", " " + anniversary + " ");
-                    messages = messages + "\nMessage " + counter + message;
+                    messages = messages + "\n\nMessage " + mCounter + "\n" + message;
                     messageList.add(phone + "@" + message);
                 }
             }
         }
-        fill_Display1(messages);
+        fill_Display1(celebrantsList);
+        fill_Display2(messages);
     }
 
 
