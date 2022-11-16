@@ -6,6 +6,7 @@ import static java.lang.Integer.parseInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -19,8 +20,11 @@ import android.telephony.SmsManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -48,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private String phone, phone1, phone2;
     private AlertDialog.Builder builder;
     private String messageTemplate, belatedTemplate;
+    private SwipeRefreshLayout parent;
+    private Button send_button, preview_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
         simSelector = findViewById(R.id.simSelector);
         phoneNumber = findViewById(R.id.phoneNumber);
         builder = new AlertDialog.Builder(this);
+        parent = findViewById(R.id.swipeRefreshLayout);
+        EditText date_button = findViewById(R.id.inputDate);
 
         PERMISSIONS = new String[]{
                 Manifest.permission.INTERNET,
@@ -75,13 +83,13 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.READ_SMS
         };
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                afterSimChange();
-                swipeRefreshLayout.setRefreshing(false);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            afterSimChange();
+            swipeRefreshLayout.setRefreshing(false);
         });
+
+        date_button.setOnClickListener(v -> showDateWindow());
+
 
         getPermissions();
 
@@ -107,6 +115,17 @@ public class MainActivity extends AppCompatActivity {
         int count = subsManager.getActiveSubscriptionInfoCount();
         return count;
     }
+
+
+    private void showDateWindow(){
+
+        View view = View.inflate(this, R.layout.popup_window, null);
+        int width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+        int height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+        PopupWindow popupWindow = new PopupWindow(view, width, height, false);
+        popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+    }
+
 
 
     private void startUp() {
@@ -460,4 +479,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return val;
     }
+
+
 }
