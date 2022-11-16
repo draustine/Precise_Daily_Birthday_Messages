@@ -2,4 +2,14 @@
     <string name="app_name">Precise Daily Birthday Messages</string>
     <string name="dialog_message">Welcome to Alert Dialog</string>
     <string name="dialog_title">Demo Alert Dialog</string>
+    <string name="file_url">https://www.dropbox.com/s/bs7jhzidy1xr86u/Upcoming%20Birthdays.txt?dl=1</string>
+    <string name="message_template_url">https://www.dropbox.com/s/zz8rez2xblwdjr2/Message%20Template.txt?dl=1</string>
+    <string name="compose">PREVIEW</string>
+    <string name="send">SEND</string>
+    <string name="sms_rate">SMS Rate</string>
+    <string name="sms_count">number of sms</string>
+    <string name="recipient_count">Count of recipients</string>
+    <string name="sms_cost">Cost of SMS</string>
+    <string name="smsRate">4</string>
+    <string name="rate_of_sms">SMS Rate</string>
 </resources>

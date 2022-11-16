@@ -14,6 +14,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -34,6 +36,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -54,15 +59,17 @@ public class MainActivity extends AppCompatActivity {
     private String messageTemplate, belatedTemplate;
     private SwipeRefreshLayout parent;
     private Button send_button, preview_button;
+    private List<String> messageList = new ArrayList<>();
+    private LocalDate localdate = LocalDate.now(), anniversaryDate;
+    private int day = localdate.getDayOfMonth(), month = localdate.getMonthValue(), year = localdate.getYear();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         phoneNumber = findViewById(R.id.phoneNumber);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-
         display1 = findViewById(R.id.display);
         display2 = findViewById(R.id.display2);
         message = findViewById(R.id.message);
@@ -73,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         builder = new AlertDialog.Builder(this);
         parent = findViewById(R.id.swipeRefreshLayout);
         EditText date_button = findViewById(R.id.inputDate);
-
         PERMISSIONS = new String[]{
                 Manifest.permission.INTERNET,
                 Manifest.permission.SEND_SMS,
@@ -104,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
 
         startUp();
 
-
+        localdate = LocalDate.of(2022, 2, 15);
+        fill_Display1(localdate.toString());
     }
 
 
@@ -114,6 +121,12 @@ public class MainActivity extends AppCompatActivity {
         }
         int count = subsManager.getActiveSubscriptionInfoCount();
         return count;
+    }
+
+
+    private void prepareMessages(){
+
+
     }
 
 
@@ -279,6 +292,20 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.setTitle("Alert Dialog Example");
         alert.show();
+    }
+
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+
+    private void getClientsList(){
+
+
     }
 
 
