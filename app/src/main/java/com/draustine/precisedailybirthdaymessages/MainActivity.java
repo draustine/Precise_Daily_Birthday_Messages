@@ -110,13 +110,12 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(() -> {
             afterSimChange();
             anniversaryDate = null;
+            onDateChange();
             dateView.setText("Click to Select/Type date");
             swipeRefreshLayout.setRefreshing(false);
         });
 
         dateView.setOnClickListener(v -> showDatePicker());
-
-
         getPermissions();
 
         //get the providers list
@@ -165,6 +164,10 @@ public class MainActivity extends AppCompatActivity {
                     anniversary = getOrdinal(cYear - year);
                     String message = messageTemplate.replace(" name,", " " + name + ",");
                     message = message.replace(" ord ", " " + anniversary + " ");
+                    if(!(anniversaryDate == null) && localDate.isAfter(anniversaryDate)){
+                        String dDate = " " + getOrdinal(cDay) + " " + getMonthName(cMonth) + " " + cYear + ", ";
+                        message = message.replace(" date ", dDate);
+                    }
                     messages = messages + "\n\nMessage " + mCounter + "\n" + message;
                     messageList.add(phone + "@" + message);
                 }
@@ -177,8 +180,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void prepareMessages(){
         String fileName = "";
-        if(!(anniversaryDate == null)){
+        if(!(anniversaryDate == null) && localDate.isAfter(anniversaryDate)){
             fileName = belatedTFileName;
+        } else if (!(anniversaryDate == null) && localDate.isEqual(anniversaryDate)){
+            fileName = messagesFilename;
         } else {
             fileName = messagesFilename;
         }
@@ -202,10 +207,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void onDateChange(){
+        messageList.clear();
+        messages = "";
+        fill_Display2("");
+        String fileName = "";
+        if(!(anniversaryDate == null) && localDate.isAfter(anniversaryDate)){
+            fileName = belatedTFileName;
+        } else if (!(anniversaryDate == null) && localDate.isEqual(anniversaryDate)){
+            fileName = messagesFilename;
+        } else {
+            fileName = messagesFilename;
+        }
+        try {
+            messageTemplate = getStringFromRaw(fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void startUp() {
         afterSimChange();
         setActiveSimProperties();
-        getMessageTemplate();
         try {
             getClientsList();
         } catch (IOException e) {
@@ -369,7 +393,6 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
-
         AlertDialog alert = builder.create();
         alert.setTitle("Alert Dialog Example");
         alert.show();
@@ -382,16 +405,6 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo activeNetworkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
-    private void getMessageTemplate(){
-        if(messageTemplate.equals("")){
-            try {
-                messageTemplate = getStringFromRaw(messagesFilename);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-}
 
 
     private void getClientsList() throws IOException, InterruptedException{
@@ -420,7 +433,6 @@ public class MainActivity extends AppCompatActivity {
                 fill_Display1("File not found");
             }
         });
-
         theList.start();
         theList.join();
     }
@@ -454,7 +466,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             fill_Display1("Online file not found");
         }
-
     }
 
 
@@ -468,7 +479,6 @@ public class MainActivity extends AppCompatActivity {
         simCount = subsManager.getActiveSubscriptionInfoCount();
         assignSims();
         setActiveSimProperties();
-
     }
 
 
@@ -670,8 +680,9 @@ public class MainActivity extends AppCompatActivity {
 
             String result = datePicker.getHeaderText();
             DateTimeFormatter format = DateTimeFormatter.ofPattern("d MMM yyyy");
-            dateView.setText(result);
+            dateView.setText("Slected date is\n" + result);
             anniversaryDate = LocalDate.parse(result, format);
+            onDateChange();
         });
 
         datePicker.show(getSupportFragmentManager(), "TAG");
