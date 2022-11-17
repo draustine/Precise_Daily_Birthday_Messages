@@ -33,6 +33,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     private LocalDate localDate = LocalDate.now(), anniversaryDate = null;
     private static final String filename = "Upcoming_Birthdays.txt";
     private static final String messagesFilename = "message_template";
+    TextView dateView;
 
 
     @Override
@@ -88,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         phoneNumber = findViewById(R.id.phoneNumber);
         builder = new AlertDialog.Builder(this);
         parent = findViewById(R.id.swipeRefreshLayout);
-        EditText date_button = findViewById(R.id.inputDate);
+        dateView = findViewById(R.id.inputDate);
         PERMISSIONS = new String[]{
                 Manifest.permission.INTERNET,
                 Manifest.permission.SEND_SMS,
@@ -104,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
             swipeRefreshLayout.setRefreshing(false);
         });
 
-        date_button.setOnClickListener(v -> showDateWindow());
+        dateView.setOnClickListener(v -> showDatePicker());
 
 
         getPermissions();
@@ -673,5 +677,22 @@ public class MainActivity extends AppCompatActivity {
 
     public void previewMessages(View view) {
         prepareMessages();
+    }
+
+    private void showDatePicker() {
+
+        MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select Date").build();
+
+        datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Object selection) {
+
+                dateView.setText(datePicker.getHeaderText());
+            }
+        });
+
+        datePicker.show(getSupportFragmentManager(), "TAG");
+
     }
 }
