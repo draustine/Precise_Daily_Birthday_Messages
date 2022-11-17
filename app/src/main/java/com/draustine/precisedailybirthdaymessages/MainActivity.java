@@ -3,16 +3,10 @@ package com.draustine.precisedailybirthdaymessages;
 import static android.text.TextUtils.isEmpty;
 import static java.lang.Integer.parseInt;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,20 +15,22 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
-import android.telephony.TelephonyManager;
 import android.text.method.ScrollingMovementMethod;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,12 +41,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -60,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
     private String[] PERMISSIONS;
     private SubscriptionManager subsManager;
     private SmsManager smsManager;
-    private int maxSimCount, simCount, activeSim, simSlot;
+    private int simCount;
+    private int activeSim;
+    private int simSlot;
     private TextView display1, display2;
     private EditText phoneNumber, message;
     private RadioGroup simSelector;
@@ -72,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout parent;
     private Button send_button, preview_button;
     private List<String> messageList = new ArrayList<>();
-    private LocalDate localDate = LocalDate.now(), anniversaryDate = null;
+    private final LocalDate localDate = LocalDate.now();
+    private LocalDate anniversaryDate = null;
     private static final String filename = "Upcoming_Birthdays.txt";
     private static final String messagesFilename = "message_template";
     private static final String belatedTFileName = "belated_message_template";
@@ -83,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         phoneNumber = findViewById(R.id.phoneNumber);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         display1 = findViewById(R.id.display);
@@ -111,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
             afterSimChange();
             anniversaryDate = null;
             onDateChange();
+            fill_Display1("");
             dateView.setText("Click to Select/Type date");
             swipeRefreshLayout.setRefreshing(false);
         });
@@ -135,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
     private void prepareMessageList(){
         String list[] = clientsList.split("\n");
         int cDay, cMonth, cYear, day, month, year;
-        String name = "", phone = "", anniversary = "";
+        String name, phone, anniversary = "";
         if (anniversaryDate == null){
             cDay = localDate.getDayOfMonth();
             cMonth = localDate.getMonthValue();
