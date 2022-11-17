@@ -175,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private void prepareMessages(){
         String fileName = "";
         if(!(anniversaryDate == null)){
@@ -395,12 +394,6 @@ public class MainActivity extends AppCompatActivity {
 }
 
 
-
-
-
-
-
-
     private void getClientsList() throws IOException, InterruptedException{
         if(isNetworkAvailable()) {
             celebrantsDownloader();
@@ -413,8 +406,6 @@ public class MainActivity extends AppCompatActivity {
                 fill_Display1("Clients file not available");
             }
         }
-
-
     }
 
 
