@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         messages = "Clients with birthday anniversary on the " + getOrdinal(cDay) + " of " +
                 getMonthName(cMonth) + " " + cYear + "\n";
         int counter = 0, mCounter = 0, smsCounter = 0, smsMax = 160, smsConc = 153;
-        String dDate
+        String dDate;
         for(String line: list){
             counter++;
             if(counter > 1) {
