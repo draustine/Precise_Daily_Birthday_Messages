@@ -48,7 +48,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-
     private SwipeRefreshLayout swipeRefreshLayout;
     private String[] PERMISSIONS;
     private SubscriptionManager subsManager;
@@ -73,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String messagesFilename = "message_template";
     private static final String belatedTFileName = "belated_message_template";
     TextView dateView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,10 +110,8 @@ public class MainActivity extends AppCompatActivity {
             dateView.setText("Click to Select/Type date");
             swipeRefreshLayout.setRefreshing(false);
         });
-
         dateView.setOnClickListener(v -> showDatePicker());
         getPermissions();
-
         //get the providers list
         try {
             getProviders();
@@ -124,11 +120,8 @@ public class MainActivity extends AppCompatActivity {
         }
         subsManager = this.getSystemService(SubscriptionManager.class);
         simSelector.setOnCheckedChangeListener((group, checkedId) -> afterSimChange());
-
         startUp();
-
     }
-
 
     private void prepareMessageList(){
         String list[] = clientsList.split("\n");
@@ -143,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
             cMonth = anniversaryDate.getMonthValue();
             cYear = anniversaryDate.getYear();
         }
-
         messages = "Clients with birthday anniversary on the " + getOrdinal(cDay) + " of " +
                 getMonthName(cMonth) + " " + cYear + "\n";
         int counter = 0, mCounter = 0;
@@ -175,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
         fill_Display2(messages);
     }
 
-
     private void prepareMessages(){
         String fileName = "";
         if(!(anniversaryDate == null) && localDate.isAfter(anniversaryDate)){
@@ -204,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
         prepareMessageList();
     }
 
-
     private void onDateChange(){
         messageList.clear();
         messages = "";
@@ -222,7 +212,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private void startUp() {
@@ -246,7 +235,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Requests for permissions
     private void getPermissions() {
-
         if (!hasPermissions(MainActivity.this, PERMISSIONS)) {
             ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, 1);
         }
@@ -285,7 +273,6 @@ public class MainActivity extends AppCompatActivity {
                 x++;
             }
         }
-
     }
 
     private void fill_Display1(String content) {
@@ -305,7 +292,6 @@ public class MainActivity extends AppCompatActivity {
         String comment = Integer.toString(content);
         display2.setText(comment);
     }
-
 
     private String getStringFromAsset(String filename) throws IOException {
         String result = "";
@@ -396,14 +382,12 @@ public class MainActivity extends AppCompatActivity {
         alert.show();
     }
 
-
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
 
     private void getClientsList() throws IOException, InterruptedException{
         if(isNetworkAvailable()) {
@@ -419,7 +403,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private void celebrantsDownloader() throws InterruptedException, MalformedURLException {
         URL list = new URL(getString(R.string.file_url));
 
@@ -434,7 +417,6 @@ public class MainActivity extends AppCompatActivity {
         theList.start();
         theList.join();
     }
-
 
     private void listDownloader(URL url) throws IOException, FileNotFoundException {
         int counter = 0;
@@ -466,7 +448,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private void afterSimChange() {
 
         initialiseSim();
@@ -479,7 +460,6 @@ public class MainActivity extends AppCompatActivity {
         setActiveSimProperties();
     }
 
-
     private void assignSims() {
         if (simCount > 1) {
             dualSimsInfo();
@@ -489,9 +469,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private void setActiveSimProperties() {
-
         String dCarrier = "";
         if (!activeCarrier.equals("") && !activeCarrier.equals(null)) {
             if (activeCarrier.contains(" ")) {
@@ -505,7 +483,6 @@ public class MainActivity extends AppCompatActivity {
         if (dCarrier.contains("-")) {
             dCarrier = dCarrier.split("-")[0].toUpperCase();
         }
-
         dCarrier = dCarrier.replaceAll("\\s", "");
         String[] providersList = providers.split("\n"), line;
         String prov = "", others = "";
@@ -520,14 +497,10 @@ public class MainActivity extends AppCompatActivity {
                 off = line[3];
             }
         }
-
         fill_Display2("Provider is: " + dCarrier + "\nShortcode is : " + shortCode + "\nOn message is : " + on + "\nOff message is : " + off);
-
     }
 
-
     private void getActiveSim() {
-
         int simIndex = simSelector.getCheckedRadioButtonId();
         int slot = 0;
         if (simIndex != -1) {
@@ -551,7 +524,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private void initialiseSim() {
         subsManager = this.getSystemService(SubscriptionManager.class);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
@@ -565,7 +537,6 @@ public class MainActivity extends AppCompatActivity {
             singleSimInfo();
         }
     }
-
 
     private void dualSimsInfo() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
@@ -584,9 +555,7 @@ public class MainActivity extends AppCompatActivity {
         sim2.setText(carrier2);
     }
 
-
     private void singleSimInfo() {
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             getPermissions();
             return;
@@ -600,20 +569,17 @@ public class MainActivity extends AppCompatActivity {
         } else {
             smsManager = SmsManager.getSmsManagerForSubscriptionId(subsInfo.getSubscriptionId());
         }
-
         if(simSlot == 1){
             sim1.setText(activeCarrier);
             sim1.setEnabled(true);
             sim1.setChecked(true);
             sim2.setEnabled(false);
-
         }else{
             sim2.setText(activeCarrier);
             sim2.setEnabled(true);
             sim2.setChecked(true);
             sim1.setEnabled(false);
         }
-
     }
 
     private String getMonthName(int month){
@@ -664,26 +630,20 @@ public class MainActivity extends AppCompatActivity {
         return val;
     }
 
-
     public void previewMessages(View view) {
         prepareMessages();
     }
 
     private void showDatePicker() {
-
         MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Select Date").build();
-
         datePicker.addOnPositiveButtonClickListener(selection -> {
-
             String result = datePicker.getHeaderText();
             DateTimeFormatter format = DateTimeFormatter.ofPattern("d MMM yyyy");
             dateView.setText("Slected date is\n" + result);
             anniversaryDate = LocalDate.parse(result, format);
             onDateChange();
         });
-
         datePicker.show(getSupportFragmentManager(), "TAG");
-
     }
 }
