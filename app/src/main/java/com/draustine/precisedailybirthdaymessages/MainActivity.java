@@ -45,7 +45,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -105,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             afterSimChange();
+            anniversaryDate = null;
+            dateView.setText("Click to Select/Type date");
             swipeRefreshLayout.setRefreshing(false);
         });
 
@@ -465,17 +470,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
     private void afterSimChange() {
 
         initialiseSim();
@@ -684,12 +678,12 @@ public class MainActivity extends AppCompatActivity {
         MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Select Date").build();
 
-        datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
-            @Override
-            public void onPositiveButtonClick(Object selection) {
+        datePicker.addOnPositiveButtonClickListener(selection -> {
 
-                dateView.setText(datePicker.getHeaderText());
-            }
+            String result = datePicker.getHeaderText();
+            DateTimeFormatter format = DateTimeFormatter.ofPattern("d MMM yyyy");
+            dateView.setText(result);
+            anniversaryDate = LocalDate.parse(result, format);
         });
 
         datePicker.show(getSupportFragmentManager(), "TAG");
