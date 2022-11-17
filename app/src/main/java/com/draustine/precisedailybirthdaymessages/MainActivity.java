@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String filename = "Upcoming_Birthdays.txt";
     private static final String messagesFilename = "message_template";
     private static final String belatedTFileName = "belated_message_template";
-    TextView dateView;
+    private TextView dateView, celebsCount, countOfSms, costOfSms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +88,10 @@ public class MainActivity extends AppCompatActivity {
         simSelector = findViewById(R.id.simSelector);
         phoneNumber = findViewById(R.id.phoneNumber);
         builder = new AlertDialog.Builder(this);
-        parent = findViewById(R.id.swipeRefreshLayout);
         dateView = findViewById(R.id.inputDate);
+        celebsCount = findViewById(R.id.celebrantsCount);
+        countOfSms = findViewById(R.id.smsCount);
+        costOfSms = findViewById(R.id.smsCost);
         PERMISSIONS = new String[]{
                 Manifest.permission.INTERNET,
                 Manifest.permission.SEND_SMS,
@@ -136,7 +138,8 @@ public class MainActivity extends AppCompatActivity {
         }
         messages = "Clients with birthday anniversary on the " + getOrdinal(cDay) + " of " +
                 getMonthName(cMonth) + " " + cYear + "\n";
-        int counter = 0, mCounter = 0;
+        int counter = 0, mCounter = 0, smsCounter = 0, smsMax = 160, smsConc = 153;
+        String dDate
         for(String line: list){
             counter++;
             if(counter > 1) {
@@ -153,8 +156,16 @@ public class MainActivity extends AppCompatActivity {
                     String message = messageTemplate.replace(" name,", " " + name + ",");
                     message = message.replace(" ord ", " " + anniversary + " ");
                     if(!(anniversaryDate == null) && localDate.isAfter(anniversaryDate)){
-                        String dDate = " " + getOrdinal(cDay) + " " + getMonthName(cMonth) + " " + cYear + ", ";
+                        dDate = " " + getOrdinal(cDay) + " " + getMonthName(cMonth) + " " + cYear + ", ";
                         message = message.replace(" date ", dDate);
+                    }
+                    int length= message.length();
+                    if(length <= smsMax){
+                        smsCounter++;
+                    } else if (length % smsConc > 0 ) {
+                        smsCounter = smsCounter + (length / smsConc) + 1;
+                    } else {
+                        smsCounter = smsCounter + (length / smsConc);
                     }
                     messages = messages + "\n\nMessage " + mCounter + "\n" + message;
                     messageList.add(phone + "@" + message);
@@ -163,6 +174,26 @@ public class MainActivity extends AppCompatActivity {
         }
         fill_Display1(celebrantsList);
         fill_Display2(messages);
+        String comment;
+        if(mCounter == 0){
+            comment = "None";
+        } else if (mCounter > 1){
+            comment = mCounter + " celebrants.";
+        } else {
+            comment = mCounter + " celebrant.";
+        }
+        celebsCount.setText(comment);
+        if(smsCounter == 0){
+            comment = "None";
+        } else if (smsCounter > 1){
+            comment = smsCounter + " messages.";
+        } else {
+            comment = smsCounter + " message.";
+        }
+        countOfSms.setText(comment);
+        int cost = 4 * smsCounter;
+        comment = "N" + cost;
+        costOfSms.setText(comment);
     }
 
     private void prepareMessages(){
