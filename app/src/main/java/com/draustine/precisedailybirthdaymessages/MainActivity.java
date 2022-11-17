@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private LocalDate localDate = LocalDate.now(), anniversaryDate = null;
     private static final String filename = "Upcoming_Birthdays.txt";
     private static final String messagesFilename = "message_template";
+    private static final String belatedTFileName = "belated_message_template";
     TextView dateView;
 
 
@@ -176,9 +177,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void prepareMessages(){
+        String fileName = "";
+        if(!(anniversaryDate == null)){
+            fileName = belatedTFileName;
+        } else {
+            fileName = messagesFilename;
+        }
         if(messageTemplate.equals("")){
             try {
-                messageTemplate = getStringFromRaw(messagesFilename);
+                messageTemplate = getStringFromRaw(fileName);
             } catch (IOException e) {
                 e.printStackTrace();
             }
