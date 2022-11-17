@@ -5,7 +5,6 @@ import static java.lang.Integer.parseInt;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
@@ -34,7 +33,6 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -362,20 +360,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void showAlert() {
         builder.setMessage(R.string.dialog_message).setTitle(R.string.dialog_title);
-        builder.setMessage("Do you want to send the displayed messages").setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        sendTheMessage();
-                        Toast.makeText(getApplicationContext(), "You selected yes", Toast.LENGTH_LONG).show();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //  Action for 'NO' Button
-                        dialog.cancel();
-                        Toast.makeText(getApplicationContext(), "you choose no action for alertbox",
-                                Toast.LENGTH_SHORT).show();
-                    }
+        builder.setMessage("Do you want to send the displayed messages").setCancelable(false)
+                .setPositiveButton("Yes", (dialog, id) -> {
+            sendTheMessage();
+            Toast.makeText(getApplicationContext(), "You selected yes", Toast.LENGTH_LONG).show();
+        })
+                .setNegativeButton("No", (dialog, id) -> {
+                    //  Action for 'NO' Button
+                    dialog.cancel();
+                    Toast.makeText(getApplicationContext(), "you choose no action for alertbox",
+                            Toast.LENGTH_SHORT).show();
                 });
         AlertDialog alert = builder.create();
         alert.setTitle("Alert Dialog Example");
@@ -418,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
         theList.join();
     }
 
-    private void listDownloader(URL url) throws IOException, FileNotFoundException {
+    private void listDownloader(URL url) throws IOException{
         int counter = 0;
         String tempStr = "", line = "";
         File path = getApplicationContext().getFilesDir();
@@ -542,9 +536,9 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             getPermissions();
         }
-        List list = subsManager.getActiveSubscriptionInfoList();
-        SubscriptionInfo subsInfo1 = (SubscriptionInfo) list.get(0);
-        SubscriptionInfo subsInfo2 = (SubscriptionInfo) list.get(1);
+        List<SubscriptionInfo> list = subsManager.getActiveSubscriptionInfoList();
+        SubscriptionInfo subsInfo1 = list.get(0);
+        SubscriptionInfo subsInfo2 = list.get(1);
         String phone1 = subsInfo1.getNumber();
         String phone2 = subsInfo2.getNumber();
         carrier1 = subsInfo1.getDisplayName().toString();
@@ -640,7 +634,7 @@ public class MainActivity extends AppCompatActivity {
         datePicker.addOnPositiveButtonClickListener(selection -> {
             String result = datePicker.getHeaderText();
             DateTimeFormatter format = DateTimeFormatter.ofPattern("d MMM yyyy");
-            dateView.setText("Slected date is\n" + result);
+            dateView.setText("Selected date is\n" + result);
             anniversaryDate = LocalDate.parse(result, format);
             onDateChange();
         });
