@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void prepareMessageList(){
         String list[] = clientsList.split("\n");
-        int cDay, cMonth, cYear, day, month;
+        int cDay, cMonth, cYear, day, month, year;
         String name = "", phone = "", anniversary = "";
         if (anniversaryDate == null){
             cDay = localDate.getDayOfMonth();
@@ -153,14 +153,15 @@ public class MainActivity extends AppCompatActivity {
             counter++;
             if(counter > 1) {
                 String[] thisLine = line.split("@");
-                day = parseInt(thisLine[3]);
-                month = parseInt(thisLine[2]);
+                day = parseInt(thisLine[2]);
+                month = parseInt(thisLine[3]);
                 if(day == cDay && month == cMonth){
                     mCounter++;
                     if(mCounter == 1){celebrantsList = line;} else {celebrantsList = celebrantsList + "\n" + line;}
                     name = thisLine[0];
                     phone = thisLine[1];
-                    anniversary = thisLine[4];
+                    year = Integer.parseInt(thisLine[4]);
+                    anniversary = getOrdinal(cYear - year);
                     String message = messageTemplate.replace(" name,", " " + name + ",");
                     message = message.replace(" ord ", " " + anniversary + " ");
                     messages = messages + "\n\nMessage " + mCounter + "\n" + message;
@@ -193,17 +194,6 @@ public class MainActivity extends AppCompatActivity {
         }
         prepareMessageList();
     }
-
-
-    private void showDateWindow(){
-
-        View view = View.inflate(this, R.layout.popup_window, null);
-        int width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
-        int height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
-        PopupWindow popupWindow = new PopupWindow(view, width, height, false);
-        popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-    }
-
 
 
     private void startUp() {
