@@ -401,6 +401,7 @@ public class MainActivity extends AppCompatActivity {
                 .setNegativeButton("No", (dialog, id) -> {
                     //  Action for 'NO' Button
                     dialog.cancel();
+                    Toast.makeText(this, "Message sending aborted", Toast.LENGTH_LONG).show();
                 });
         AlertDialog alert = builder.create();
         alert.setTitle("Confirm to send messages");
