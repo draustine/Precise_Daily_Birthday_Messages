@@ -386,6 +386,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendMessage(View view) {
+        if(messageList.size() == 0){
+            prepareMessages();
+        }
         showAlert();
     }
 
@@ -394,16 +397,13 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage("Do you want to send the displayed messages").setCancelable(false)
                 .setPositiveButton("Yes", (dialog, id) -> {
             sendTheMessage();
-            Toast.makeText(getApplicationContext(), "You selected yes", Toast.LENGTH_LONG).show();
         })
                 .setNegativeButton("No", (dialog, id) -> {
                     //  Action for 'NO' Button
                     dialog.cancel();
-                    Toast.makeText(getApplicationContext(), "you choose no action for alertbox",
-                            Toast.LENGTH_SHORT).show();
                 });
         AlertDialog alert = builder.create();
-        alert.setTitle("Alert Dialog Example");
+        alert.setTitle("Confirm to send messages");
         alert.show();
     }
 
