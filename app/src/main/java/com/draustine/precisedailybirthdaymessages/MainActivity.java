@@ -30,6 +30,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String messagesFilename = "message_template";
     private static final String belatedTFileName = "belated_message_template";
     private TextView dateView, celebsCount, countOfSms, costOfSms;
+    private MaterialAlertDialogBuilder materialAlertDialogBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         simSelector = findViewById(R.id.simSelector);
         phoneNumber = findViewById(R.id.phoneNumber);
         builder = new AlertDialog.Builder(this);
+        materialAlertDialogBuilder = new MaterialAlertDialogBuilder(this, 1);
         dateView = findViewById(R.id.inputDate);
         celebsCount = findViewById(R.id.celebrantsCount);
         countOfSms = findViewById(R.id.smsCount);
@@ -227,6 +230,9 @@ public class MainActivity extends AppCompatActivity {
     private void onDateChange(){
         messageList.clear();
         messages = "";
+        celebsCount.setText("");
+        costOfSms.setText("");
+        countOfSms.setText("");
         fill_Display2("");
         String fileName = "";
         if(!(anniversaryDate == null) && localDate.isAfter(anniversaryDate)){
@@ -389,8 +395,32 @@ public class MainActivity extends AppCompatActivity {
         if(messageList.size() == 0){
             prepareMessages();
         }
-        showAlert();
+        showMaterialAlert();
     }
+
+
+
+    private void showMaterialAlert(){
+
+        materialAlertDialogBuilder.setMessage("Do you want to send the displayed messages").setTitle(R.string.dialog_title);
+        materialAlertDialogBuilder.setCancelable(false)
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    Toast.makeText(this, "Message sent", Toast.LENGTH_LONG).show();
+                    sendTheMessage();
+        })
+                .setNegativeButton("No", (dialog, which) -> {
+                    Toast.makeText(this, "Message sending aborted", Toast.LENGTH_LONG).show();
+                    dialog.cancel();
+                });
+        AlertDialog alert = materialAlertDialogBuilder.create();
+        alert.setTitle("Confirm to send messages");
+        alert.show();
+
+    }
+
+
+
+
 
     private void showAlert() {
         builder.setMessage(R.string.dialog_message).setTitle(R.string.dialog_title);
