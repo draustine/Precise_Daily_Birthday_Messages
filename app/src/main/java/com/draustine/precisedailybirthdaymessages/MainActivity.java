@@ -399,9 +399,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private void showMaterialAlert(){
-
         materialAlertDialogBuilder.setMessage("Do you want to send the displayed messages").setTitle(R.string.dialog_title);
         materialAlertDialogBuilder.setCancelable(false)
                 .setPositiveButton("Yes", (dialog, which) -> {
@@ -415,11 +413,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alert = materialAlertDialogBuilder.create();
         alert.setTitle("Confirm to send messages");
         alert.show();
-
     }
-
-
-
 
 
     private void showAlert() {
@@ -461,7 +455,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void celebrantsDownloader() throws InterruptedException, MalformedURLException {
         URL list = new URL(getString(R.string.file_url));
-
         Thread theList = new Thread(()->{
             try {
                 listDownloader(list);
@@ -505,7 +498,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void afterSimChange() {
-
         initialiseSim();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             getPermissions();
