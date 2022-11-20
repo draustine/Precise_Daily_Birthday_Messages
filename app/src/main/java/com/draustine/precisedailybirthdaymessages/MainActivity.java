@@ -53,11 +53,11 @@ public class MainActivity extends AppCompatActivity {
     private SmsManager smsManager;
     private int simCount;
     private int activeSim;
-    private int simSlot;
     private TextView display1, display2;
-    private EditText phoneNumber, message;
+    private EditText phoneNumber;
     private RadioGroup simSelector;
-    private RadioButton sim1, sim2, selectedSim;
+    private RadioButton sim1;
+    private RadioButton sim2;
     private String carrier, carrier1, carrier2, activeCarrier, providers, shortCode, on, off;
     private String phone, phone1, phone2;
     private AlertDialog.Builder builder;
@@ -69,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
     private LocalDate anniversaryDate = null;
     private static final String filename = "Upcoming_Birthdays.txt";
     private static final String messagesFilename = "message_template";
-    private static final String belatedTFileName = "belated_message_template";
+    private static final String belatedTFileName = "belated";
+    //private static final String belatedTFileName = "belated_message_template";
     private TextView dateView, celebsCount, countOfSms, costOfSms;
     private MaterialAlertDialogBuilder materialAlertDialogBuilder;
 
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         display2 = findViewById(R.id.display2);
         display1.setMovementMethod(new ScrollingMovementMethod());
         display2.setMovementMethod(new ScrollingMovementMethod());
-        message = findViewById(R.id.message);
+        EditText message = findViewById(R.id.message);
         sim1 = findViewById(R.id.sim1);
         sim2 = findViewById(R.id.sim2);
         simSelector = findViewById(R.id.simSelector);
@@ -159,8 +160,14 @@ public class MainActivity extends AppCompatActivity {
                     String message = messageTemplate.replace(" name,", " " + name + ",");
                     message = message.replace(" ord ", " " + anniversary + " ");
                     if(!(anniversaryDate == null) && localDate.isAfter(anniversaryDate)){
-                        dDate = " " + getOrdinal(cDay) + " " + getMonthName(cMonth) + " " + cYear + ", ";
-                        message = message.replace(" date ", dDate);
+                        int d = day - cDay;
+                        if(d == 1){
+                            dDate = " yesterday ";
+                        }else{
+                            dDate = d + " days ago ";
+                        }
+                        //dDate = " " + getOrdinal(cDay) + " " + getMonthName(cMonth) + " " + cYear + ", ";
+                        message = message.replace(" @day ", dDate);
                     }
                     int length= message.length();
                     if(length <= smsMax){
@@ -552,7 +559,7 @@ public class MainActivity extends AppCompatActivity {
         int simIndex = simSelector.getCheckedRadioButtonId();
         int slot = 0;
         if (simIndex != -1) {
-            selectedSim = findViewById(simIndex);
+            RadioButton selectedSim = findViewById(simIndex);
             activeSim = parseInt((String) selectedSim.getTag());
             slot = activeSim + 1;
             if (slot == 1) {
@@ -611,7 +618,7 @@ public class MainActivity extends AppCompatActivity {
         SubscriptionInfo subsInfo = subsManager.getActiveSubscriptionInfo(SubscriptionManager.getDefaultSmsSubscriptionId());
         activeCarrier = subsInfo.getDisplayName().toString();
         int slot = subsInfo.getSimSlotIndex();
-        simSlot = slot + 1;
+        int simSlot = slot + 1;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             smsManager = getApplicationContext().getSystemService(SmsManager.class);
         } else {
