@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String filename = "Upcoming_Birthdays.txt";
     private static final String messagesFilename = "message_template";
     private static final String belatedTFileName = "belated";
-    //private static final String belatedTFileName = "belated_message_template";
     private TextView dateView, celebsCount, countOfSms, costOfSms;
     private MaterialAlertDialogBuilder materialAlertDialogBuilder;
 
