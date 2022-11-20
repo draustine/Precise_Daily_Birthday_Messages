@@ -26,7 +26,8 @@
                 android:onClick="previewMessages"
                 android:text="Preview"
                 app:layout_constraintBottom_toTopOf="@+id/sendButton"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="HardcodedText" />
 
             <RadioGroup
                 android:id="@+id/simSelector"
@@ -42,7 +43,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:tag="0"
-                    android:text="Sim 1" />
+                    android:text="Sim 1"
+                    tools:ignore="HardcodedText" />
 
                 <RadioButton
                     android:id="@+id/sim2"
@@ -50,7 +52,8 @@
                     android:layout_height="wrap_content"
                     android:checked="true"
                     android:tag="1"
-                    android:text="Sim 2" />
+                    android:text="Sim 2"
+                    tools:ignore="HardcodedText" />
             </RadioGroup>
 
             <Button
@@ -62,7 +65,8 @@
                 android:onClick="sendMessage"
                 android:text="SEND"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="HardcodedText" />
 
             <EditText
                 android:id="@+id/phoneNumber"
@@ -74,7 +78,7 @@
                 android:inputType="phone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"
+                tools:ignore="LabelFor,SpeakableTextPresentCheck,TouchTargetSizeCheck"
                 android:autofillHints="" />
 
             <TextView
@@ -89,7 +93,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.679"
-                tools:ignore="SpeakableTextPresentCheck" />
+                tools:ignore="HardcodedText,SpeakableTextPresentCheck" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -109,7 +113,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
 
 
     <TextView
@@ -125,7 +130,8 @@
         app:layout_constraintBottom_toTopOf="@+id/display"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/message"
@@ -142,7 +148,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Type your message here" />
+        tools:text="Type your message here"
+        tools:ignore="Autofill,LabelFor" />
 
 
     <TextView
@@ -153,7 +160,8 @@
         android:layout_marginBottom="10dp"
         android:text="number of celebrants"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/smsCount"
@@ -164,7 +172,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/smsCost"
         app:layout_constraintHorizontal_bias="0.456"
-        app:layout_constraintStart_toEndOf="@+id/celebrantsCount" />
+        app:layout_constraintStart_toEndOf="@+id/celebrantsCount"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/smsCost"
@@ -174,7 +183,8 @@
         android:layout_marginBottom="10dp"
         android:text="cost of messages"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="HardcodedText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
