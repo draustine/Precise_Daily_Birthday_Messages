@@ -41,7 +41,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:checked="true"
                     android:tag="0"
                     android:text="Sim 1" />
 
@@ -49,6 +48,7 @@
                     android:id="@+id/sim2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:checked="true"
                     android:tag="1"
                     android:text="Sim 2" />
             </RadioGroup>
