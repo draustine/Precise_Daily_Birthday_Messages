@@ -167,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
                         }else{
                             dDate = " " + d + " days ago ";
                         }
-                        //dDate = " " + getOrdinal(cDay) + " " + getMonthName(cMonth) + " " + cYear + ", ";
                         message = message.replace(" @day ", dDate);
                     }
                     int length= message.length();
