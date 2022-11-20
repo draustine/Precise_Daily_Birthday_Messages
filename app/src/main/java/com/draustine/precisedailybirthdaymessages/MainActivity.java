@@ -42,6 +42,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,11 +161,11 @@ public class MainActivity extends AppCompatActivity {
                     String message = messageTemplate.replace(" name,", " " + name + ",");
                     message = message.replace(" ord ", " " + anniversary + " ");
                     if(!(anniversaryDate == null) && localDate.isAfter(anniversaryDate)){
-                        int d = day - cDay;
+                        int d = (int) ChronoUnit.DAYS.between(anniversaryDate, localDate);
                         if(d == 1){
                             dDate = " yesterday ";
                         }else{
-                            dDate = d + " days ago ";
+                            dDate = " " + d + " days ago ";
                         }
                         //dDate = " " + getOrdinal(cDay) + " " + getMonthName(cMonth) + " " + cYear + ", ";
                         message = message.replace(" @day ", dDate);
