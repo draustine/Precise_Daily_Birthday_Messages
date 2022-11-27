@@ -409,7 +409,6 @@ public class MainActivity extends AppCompatActivity {
         materialAlertDialogBuilder.setMessage("Do you want to send the displayed messages").setTitle(R.string.dialog_title);
         materialAlertDialogBuilder.setCancelable(false)
                 .setPositiveButton("Yes", (dialog, which) -> {
-                    Toast.makeText(this, "Message sent", Toast.LENGTH_LONG).show();
                     sendTheMessage();
         })
                 .setNegativeButton("No", (dialog, which) -> {
