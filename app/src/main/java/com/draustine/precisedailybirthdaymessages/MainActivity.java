@@ -33,7 +33,6 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -433,14 +432,15 @@ public class MainActivity extends AppCompatActivity {
     private void getClientsList() throws IOException, InterruptedException{
         if(isNetworkAvailable()) {
             celebrantsDownloader();
-            fill_Display1(celebrantsList);
+            safeLocalList(filename, clientsList);
         }else{
-            clientsList = getStringFromRaw(filename);
-            if (clientsList != "") {
-                String tempStr = "No Internet connection\n List from File is\n" + clientsList;
-            } else {
-                fill_Display1("Clients file not available");
-            }
+            clientsList = listFromInternal(filename);
+            //clientsList = getStringFromRaw(filename);
+        }
+        if (clientsList != "") {
+            String tempStr = "No Internet connection\n List from File is\n" + clientsList;
+        } else {
+            fill_Display1("No clients with birthday today");
         }
     }
 
@@ -492,7 +492,7 @@ public class MainActivity extends AppCompatActivity {
     private void listDownloader(URL url) throws IOException{
         int counter = 0;
         String tempStr = "", line = "";
-        File path = getApplicationContext().getFilesDir();
+//        File path = getApplicationContext().getFilesDir();
         try{
             InputStream inp = url.openStream();
             InputStreamReader reader = new InputStreamReader(inp);
@@ -506,10 +506,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             clientsList = tempStr;
-            File outputFile = new File(path, filename);
-            FileOutputStream writer = new FileOutputStream(outputFile);
-            writer.write(tempStr.getBytes());
-            writer.close();
+//            File outputFile = new File(path, filename);
+//            FileOutputStream writer = new FileOutputStream(outputFile);
+//            writer.write(tempStr.getBytes());
+//            writer.close();
             br.close();
             reader.close();
             inp.close();
