@@ -34,10 +34,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -421,22 +423,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void showAlert() {
-        builder.setMessage(R.string.dialog_message).setTitle(R.string.dialog_title);
-        builder.setMessage("Do you want to send the displayed messages").setCancelable(false)
-                .setPositiveButton("Yes", (dialog, id) -> {
-            sendTheMessage();
-        })
-                .setNegativeButton("No", (dialog, id) -> {
-                    //  Action for 'NO' Button
-                    dialog.cancel();
-                    Toast.makeText(this, "Message sending aborted", Toast.LENGTH_LONG).show();
-                });
-        AlertDialog alert = builder.create();
-        alert.setTitle("Confirm to send messages");
-        alert.show();
-    }
-
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -456,6 +442,37 @@ public class MainActivity extends AppCompatActivity {
                 fill_Display1("Clients file not available");
             }
         }
+    }
+
+
+    private void safeLocalList(String fileName, String content){
+        try {
+            FileOutputStream fOut = openFileOutput(fileName,Context.MODE_PRIVATE);
+            fOut.write(content.getBytes());
+            fOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String listFromInternal(String fileName){
+        String str = "";
+        try {
+            FileInputStream fileInputStream = openFileInput(fileName);
+            InputStreamReader   inputStreamReader = new InputStreamReader(fileInputStream);
+            StringWriter sw = new StringWriter();
+            int DEFAULT_BUFFER_SIZE = 1024 * 4;
+            char[] buffer = new char[DEFAULT_BUFFER_SIZE];
+            int n = 0;
+            while (-1 != (n = inputStreamReader.read(buffer))) {
+                sw.write(buffer, 0, n);
+            }
+            inputStreamReader.close();
+            str = sw.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return str;
     }
 
     private void celebrantsDownloader() throws InterruptedException, MalformedURLException {
