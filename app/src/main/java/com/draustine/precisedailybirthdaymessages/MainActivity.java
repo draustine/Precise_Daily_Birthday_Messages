@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     private RadioButton sim2;
     private String carrier, carrier1, carrier2, activeCarrier, providers, shortCode, on, off;
     private String phone, phone1, phone2;
-    private AlertDialog.Builder builder;
     private String messageTemplate = "", belatedTemplate = "", clientsList = "", celebrantsList = "", messages = "";
     private SwipeRefreshLayout parent;
     private Button send_button, preview_button;
@@ -91,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
         sim2 = findViewById(R.id.sim2);
         simSelector = findViewById(R.id.simSelector);
         phoneNumber = findViewById(R.id.phoneNumber);
-        builder = new AlertDialog.Builder(this);
         materialAlertDialogBuilder = new MaterialAlertDialogBuilder(this, 1);
         dateView = findViewById(R.id.inputDate);
         celebsCount = findViewById(R.id.celebrantsCount);
