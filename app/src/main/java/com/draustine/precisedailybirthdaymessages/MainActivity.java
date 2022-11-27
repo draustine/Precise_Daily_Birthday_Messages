@@ -471,6 +471,8 @@ public class MainActivity extends AppCompatActivity {
             str = sw.toString();
         } catch (IOException e) {
             e.printStackTrace();
+            fill_Display2("There is no internet connection and no Local copy of file.\nEnsure you have data connection and try again");
+//            System.exit(1);
         }
         return str;
     }
