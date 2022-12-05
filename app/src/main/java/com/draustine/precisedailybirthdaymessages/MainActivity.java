@@ -116,11 +116,6 @@ public class MainActivity extends AppCompatActivity {
         dateView.setOnClickListener(v -> showDatePicker());
         getPermissions();
         //get the providers list
-        try {
-            getProviders();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         subsManager = this.getSystemService(SubscriptionManager.class);
         simSelector.setOnCheckedChangeListener((group, checkedId) -> afterSimChange());
         startUp();
@@ -233,8 +228,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startUp() {
-        afterSimChange();
-        setActiveSimProperties();
         try {
             getClientsList();
         } catch (IOException e) {
@@ -242,14 +235,10 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        afterSimChange();
+        setActiveSimProperties();
     }
 
-    private void getProviders() throws IOException {
-        String filename = "network_providers";
-        providers = getStringFromRaw(filename);
-        filename = "Belated Message Template";
-        belatedTemplate = getStringFromAsset(filename);
-    }
 
     // Requests for permissions
     private void getPermissions() {
