@@ -4,6 +4,8 @@
     <string name="dialog_title">Demo Alert Dialog</string>
     <string name="file_url">https://www.dropbox.com/s/bs7jhzidy1xr86u/Upcoming%20Birthdays.txt?dl=1</string>
     <string name="message_template_url">https://www.dropbox.com/s/zz8rez2xblwdjr2/Message%20Template.txt?dl=1</string>
+    <string name="belated_url">https://www.dropbox.com/s/gwz19d5kk3n0c79/Belated%20Message%20Template.txt?dl=1</string>
+    <string name="providers_url">https://www.dropbox.com/s/yzxzzicw1eox5op/Newtork%20Providers.txt?dl=1</string>
     <string name="compose">PREVIEW</string>
     <string name="send">SEND</string>
     <string name="sms_rate">SMS Rate</string>

@@ -39,7 +39,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -428,12 +427,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getClientsList() throws IOException, InterruptedException{
+        String file, content;
         if(isNetworkAvailable()) {
-            celebrantsDownloader();
-            safeLocalList(filename, clientsList);
+            filesDownloader();
+            file = filename;
+            content = clientsList;
+            safeLocalList(file, content);
+
+            file = "Message Template.txt";
+            content = messageTemplate;
+            safeLocalList(file, content);
+
+            file = "Belated Message Template.txt";
+            content = belatedTemplate;
+            safeLocalList(file, content);
+
+            file = "Providers.txt";
+            content = providers;
+            safeLocalList(file, content);
+
         }else{
             clientsList = listFromInternal(filename);
-            //clientsList = getStringFromRaw(filename);
+
+            file = "Message Template.txt";
+            messageTemplate  = listFromInternal(file);
+
+            file = "Belated Message Template.txt";
+            belatedTemplate  = listFromInternal(file);
+
+            file = "Providers.txt";
+            providers = listFromInternal(file);
         }
         if (clientsList != "") {
             String tempStr = "No Internet connection\n List from File is\n" + clientsList;
@@ -441,7 +464,6 @@ public class MainActivity extends AppCompatActivity {
             fill_Display1("No clients with birthday today");
         }
     }
-
 
     private void safeLocalList(String fileName, String content){
         try {
@@ -475,26 +497,28 @@ public class MainActivity extends AppCompatActivity {
         return str;
     }
 
-    private void celebrantsDownloader() throws InterruptedException, MalformedURLException {
-        URL list = new URL(getString(R.string.file_url));
-        Thread theList = new Thread(()->{
-            try {
-                listDownloader(list);
-            } catch (IOException e) {
-                e.printStackTrace();
-                fill_Display1("File not found");
-            }
-        });
+    private void filesDownloader() throws InterruptedException{
+        Thread theList = new Thread(this::clientListDownloader);
+        Thread belatedFile = new Thread(this::belatedDownloader);
+        Thread messageFile = new Thread(this::templateDownloader);
+        Thread providersFile = new Thread(this::providersDownloader);
         theList.start();
+        belatedFile.start();
+        messageFile.start();
+        providersFile.start();
         theList.join();
+        belatedFile.join();
+        messageFile.join();
+        providersFile.join();
     }
 
-    private void listDownloader(URL url) throws IOException{
+
+    private void clientListDownloader(){
         int counter = 0;
-        String tempStr = "", line = "";
-//        File path = getApplicationContext().getFilesDir();
-        try{
-            InputStream inp = url.openStream();
+        try {
+            URL fileUrl = new URL(getString(R.string.file_url));
+            String tempStr = "", line = "";
+            InputStream inp = fileUrl.openStream();
             InputStreamReader reader = new InputStreamReader(inp);
             BufferedReader br = new BufferedReader(reader);
             while((line = br.readLine()) != null) {
@@ -506,16 +530,92 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             clientsList = tempStr;
-//            File outputFile = new File(path, filename);
-//            FileOutputStream writer = new FileOutputStream(outputFile);
-//            writer.write(tempStr.getBytes());
-//            writer.close();
             br.close();
             reader.close();
             inp.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            fill_Display1("Online file not found");
+        }
+    }
+
+
+
+    private void belatedDownloader(){
+        int counter = 0;
+        try {
+            URL fileUrl = new URL(getString(R.string.belated_url));
+            String tempStr = "", line = "";
+            InputStream inp = fileUrl.openStream();
+            InputStreamReader reader = new InputStreamReader(inp);
+            BufferedReader br = new BufferedReader(reader);
+            while((line = br.readLine()) != null) {
+                    counter++;
+                    if (counter == 1) {
+                        tempStr = line;
+                    } else {
+                        tempStr = tempStr + "\n" + line;
+                    }
+                }
+                belatedTemplate = tempStr;
+                br.close();
+                reader.close();
+                inp.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void templateDownloader(){
+        int counter = 0;
+        try {
+            URL fileUrl = new URL(getString(R.string.message_template_url));
+            String tempStr = "", line = "";
+            InputStream inp = fileUrl.openStream();
+            InputStreamReader reader = new InputStreamReader(inp);
+            BufferedReader br = new BufferedReader(reader);
+            while((line = br.readLine()) != null) {
+                counter++;
+                if (counter == 1) {
+                    tempStr = line;
+                } else {
+                    tempStr = tempStr + "\n" + line;
+                }
+            }
+            messageTemplate = tempStr;
+            br.close();
+            reader.close();
+            inp.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void providersDownloader(){
+        int counter = 0;
+        try {
+            URL fileUrl = new URL(getString(R.string.providers_url));
+            String tempStr = "", line = "";
+            InputStream inp = fileUrl.openStream();
+            InputStreamReader reader = new InputStreamReader(inp);
+            BufferedReader br = new BufferedReader(reader);
+            while((line = br.readLine()) != null) {
+                counter++;
+                if (counter == 1) {
+                    tempStr = line;
+                } else {
+                    tempStr = tempStr + "\n" + line;
+                }
+            }
+            providers = tempStr;
+            br.close();
+            reader.close();
+            inp.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
