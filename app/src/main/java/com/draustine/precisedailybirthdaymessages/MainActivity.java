@@ -68,8 +68,9 @@ public class MainActivity extends AppCompatActivity {
     private final LocalDate localDate = LocalDate.now();
     private LocalDate anniversaryDate = null;
     private static final String filename = "Upcoming_Birthdays.txt";
-    private static final String messagesFilename = "message_template";
-    private static final String belatedTFileName = "belated";
+    private static final String messageFilename = "Message Template.txt";
+    private static final String belatedTFileName = "Belated Message Template.txt";
+    private static final String providersFileName = "Providers.txt";
     private TextView dateView, celebsCount, countOfSms, costOfSms;
     private MaterialAlertDialogBuilder materialAlertDialogBuilder;
 
@@ -204,20 +205,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void prepareMessages(){
-        String fileName = "";
         if(!(anniversaryDate == null) && localDate.isAfter(anniversaryDate)){
-            fileName = belatedTFileName;
-        } else if (!(anniversaryDate == null) && localDate.isEqual(anniversaryDate)){
-            fileName = messagesFilename;
-        } else {
-            fileName = messagesFilename;
-        }
-        if(messageTemplate.equals("")){
-            try {
-                messageTemplate = getStringFromRaw(fileName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            messageTemplate = belatedTemplate;
         }
         if(clientsList ==""){
             try {
@@ -238,18 +227,8 @@ public class MainActivity extends AppCompatActivity {
         costOfSms.setText("");
         countOfSms.setText("");
         fill_Display2("");
-        String fileName = "";
         if(!(anniversaryDate == null) && localDate.isAfter(anniversaryDate)){
-            fileName = belatedTFileName;
-        } else if (!(anniversaryDate == null) && localDate.isEqual(anniversaryDate)){
-            fileName = messagesFilename;
-        } else {
-            fileName = messagesFilename;
-        }
-        try {
-            messageTemplate = getStringFromRaw(fileName);
-        } catch (IOException e) {
-            e.printStackTrace();
+            messageTemplate = belatedTemplate;
         }
     }
 
