@@ -225,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
         if(!(anniversaryDate == null) && localDate.isAfter(anniversaryDate)){
             messageTemplate = belatedTemplate;
         }
+        setActiveSimProperties();
     }
 
     private void startUp() {
@@ -300,44 +301,44 @@ public class MainActivity extends AppCompatActivity {
         display2.setText(comment);
     }
 
-    private String getStringFromAsset(String filename) throws IOException {
-        String result = "";
-        InputStream is = getAssets().open(filename);
-        InputStreamReader isr = new InputStreamReader(is);
-        BufferedReader br = new BufferedReader(isr);
-        String line;
-        int counter = 0;
-        while ((line = br.readLine()) != null) {
-            counter++;
-            if (counter == 1) {
-                result = line;
-            } else {
-                result = result + "\n" + line;
-            }
-        }
-        return result;
-    }
-
-    private String getStringFromRaw(String filename) throws IOException {
-        String result = "";
-        InputStream is = getResources().openRawResource(getResources().getIdentifier(filename, "raw", getPackageName()));
-        InputStreamReader isr = new InputStreamReader(is);
-        BufferedReader br = new BufferedReader(isr);
-        String line;
-        int counter = 0;
-        while ((line = br.readLine()) != null) {
-            counter++;
-            if (counter == 1) {
-                result = line;
-            } else {
-                result = result + "\n" + line;
-            }
-        }
-        return result;
-    }
+//    private String getStringFromAsset(String filename) throws IOException {
+//        String result = "";
+//        InputStream is = getAssets().open(filename);
+//        InputStreamReader isr = new InputStreamReader(is);
+//        BufferedReader br = new BufferedReader(isr);
+//        String line;
+//        int counter = 0;
+//        while ((line = br.readLine()) != null) {
+//            counter++;
+//            if (counter == 1) {
+//                result = line;
+//            } else {
+//                result = result + "\n" + line;
+//            }
+//        }
+//        return result;
+//    }
+//
+//    private String getStringFromRaw(String filename) throws IOException {
+//        String result = "";
+//        InputStream is = getResources().openRawResource(getResources().getIdentifier(filename, "raw", getPackageName()));
+//        InputStreamReader isr = new InputStreamReader(is);
+//        BufferedReader br = new BufferedReader(isr);
+//        String line;
+//        int counter = 0;
+//        while ((line = br.readLine()) != null) {
+//            counter++;
+//            if (counter == 1) {
+//                result = line;
+//            } else {
+//                result = result + "\n" + line;
+//            }
+//        }
+//        return result;
+//    }
 
     private void sendTheMessage() {
-        String body, number, defaultNumber;
+        String body, number;
         number = phoneNumber.getText().toString();
         String comment = "";
         if (!(isEmpty(number))) {
