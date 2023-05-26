@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String providersFileName = "Providers.txt";
     private TextView dateView, celebsCount, countOfSms, costOfSms;
     private MaterialAlertDialogBuilder materialAlertDialogBuilder;
+    private String smsc_number;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void prepareMessageList(){
+        messageList.clear();
         String list[] = clientsList.split("\n");
         int cDay, cMonth, cYear, day, month, year, age;
         String title, name, phone, anniversary = "";
@@ -307,45 +310,11 @@ public class MainActivity extends AppCompatActivity {
         display2.setText(comment);
     }
 
-//    private String getStringFromAsset(String filename) throws IOException {
-//        String result = "";
-//        InputStream is = getAssets().open(filename);
-//        InputStreamReader isr = new InputStreamReader(is);
-//        BufferedReader br = new BufferedReader(isr);
-//        String line;
-//        int counter = 0;
-//        while ((line = br.readLine()) != null) {
-//            counter++;
-//            if (counter == 1) {
-//                result = line;
-//            } else {
-//                result = result + "\n" + line;
-//            }
-//        }
-//        return result;
-//    }
-//
-//    private String getStringFromRaw(String filename) throws IOException {
-//        String result = "";
-//        InputStream is = getResources().openRawResource(getResources().getIdentifier(filename, "raw", getPackageName()));
-//        InputStreamReader isr = new InputStreamReader(is);
-//        BufferedReader br = new BufferedReader(isr);
-//        String line;
-//        int counter = 0;
-//        while ((line = br.readLine()) != null) {
-//            counter++;
-//            if (counter == 1) {
-//                result = line;
-//            } else {
-//                result = result + "\n" + line;
-//            }
-//        }
-//        return result;
-//    }
 
     private void sendTheMessage() {
         String body, number;
         number = phoneNumber.getText().toString();
+
         String comment = "";
         if (!(isEmpty(number))) {
             body = display1.getText().toString();
@@ -791,4 +760,5 @@ public class MainActivity extends AppCompatActivity {
         });
         datePicker.show(getSupportFragmentManager(), "TAG");
     }
+
 }
