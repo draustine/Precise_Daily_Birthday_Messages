@@ -123,8 +123,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void prepareMessageList(){
         String list[] = clientsList.split("\n");
-        int cDay, cMonth, cYear, day, month, year;
-        String name, phone, anniversary = "";
+        int cDay, cMonth, cYear, day, month, year, age;
+        String title, name, phone, anniversary = "";
         if (anniversaryDate == null){
             cDay = localDate.getDayOfMonth();
             cMonth = localDate.getMonthValue();
@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
             cMonth = anniversaryDate.getMonthValue();
             cYear = anniversaryDate.getYear();
         }
+
         messages = "Clients with birthday anniversary on the " + getOrdinal(cDay) + " of " +
                 getMonthName(cMonth) + " " + cYear + "\n";
         int counter = 0, mCounter = 0, smsCounter = 0, smsMax = 160, smsConc = 153;
@@ -142,17 +143,22 @@ public class MainActivity extends AppCompatActivity {
             counter++;
             if(counter > 1) {
                 String[] thisLine = line.split("@");
-                day = parseInt(thisLine[2]);
-                month = parseInt(thisLine[3]);
+                day = parseInt(thisLine[3]);
+                month = parseInt(thisLine[4]);
+
                 if(day == cDay && month == cMonth){
                     mCounter++;
                     if(mCounter == 1){celebrantsList = line;} else {celebrantsList = celebrantsList + "\n" + line;}
-                    name = thisLine[0];
-                    phone = thisLine[1];
-                    year = Integer.parseInt(thisLine[4]);
-                    anniversary = getOrdinal(cYear - year);
-                    String message = messageTemplate.replace(" name,", " " + name + ",");
-                    message = message.replace(" ord ", " " + anniversary + " ");
+                    name = thisLine[1];
+                    phone = thisLine[2];
+                    year  = parseInt(thisLine[5]);
+                    age = cYear - year;
+                    anniversary = getOrdinal(age);
+                    title = thisLine[0];
+                    if(title.equals("MASTER") && age >= 18){title = "MR";}
+                    String message = messageTemplate.replace("*name*", name);
+                    message = message.replace("*Title*", title);
+                    message = message.replace("*ord*", anniversary);
                     if(!(anniversaryDate == null) && localDate.isAfter(anniversaryDate)){
                         int d = (int) ChronoUnit.DAYS.between(anniversaryDate, localDate);
                         if(d == 1){
