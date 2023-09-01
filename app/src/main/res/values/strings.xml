@@ -2,7 +2,7 @@
     <string name="app_name">Precise Daily Birthday Messages</string>
     <string name="dialog_message">Welcome to Alert Dialog</string>
     <string name="dialog_title">Demo Alert Dialog</string>
-    <string name="file_url">https://www.dropbox.com/s/bs7jhzidy1xr86u/Upcoming%20Birthdays.txt?dl=1</string>
+    <string name="file_url">https://www.dropbox.com/scl/fi/y9vstsw309mvba4wzwoc0/Upcoming-Birthdays.txt?rlkey=2slnm7kh2b82d4rghcerettoe&amp;dl=1</string>
     <string name="message_template_url">https://www.dropbox.com/s/4dnasn9so472811/Message%20Template%20New.txt?dl=1</string>
     <string name="belated_url">https://www.dropbox.com/s/ikxz6afby26cr93/Belated%20Message%20Template%20New.txt?dl=1</string>
     <string name="providers_url">https://www.dropbox.com/s/yzxzzicw1eox5op/Newtork%20Providers.txt?dl=1</string>
